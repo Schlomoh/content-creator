@@ -8,21 +8,20 @@ import { theme } from "@/theme";
 import { store } from "@/store";
 
 function App() {
+  const globalStyles = css`
+    body {
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+    }
+  `;
+
   return (
     <ReduxProvider store={store}>
       <CssBaseline />
       <CssVarsProvider theme={theme} defaultMode={"dark"}>
-        <Global
-          styles={css`
-            body {
-              margin: 0;
-            }
-
-            * {
-              box-sizing: border-box;
-            }
-          `}
-        />
+        <Global styles={globalStyles} />
         <Navigation />
 
         <Routes>

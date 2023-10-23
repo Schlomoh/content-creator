@@ -1,105 +1,78 @@
-import express from "express";
-import cors from "cors";
-import { config } from "dotenv";
-import "./config/passportSetup.js";
-import morgan from "morgan"; // Make sure it's imported at the top
+// Core libraries
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+const session = require('express-session');
+const passport = require('passport');
 
-const session = require("express-session");
-const passport = require("passport");
-
-config();
+// Configuration and initial setup
+dotenv.config();
+require('./config/passportSetup');
 
 const app = express();
+const PORT = process.env.PORT || 5090;
+const CLIENT_URL = "http://localhost:5173";  // Make this configurable for different environments
 
-// Middleware
-app.use(morgan("combined"));
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-app.use(express.json());
-
-app.use(
-  session({
-    secret: process.env.GOOGLE_CLIENT_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// Middleware stack
+app.use(morgan('combined')); // For logging HTTP requests. 'combined' gives detailed information.
+app.use(cors({ origin: CLIENT_URL, credentials: true })); // CORS setup
+app.use(express.json()); // For parsing JSON request body
+app.use(session({
+  secret: process.env.GOOGLE_CLIENT_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/auth/google/redirect", (req, res, next) => {
-  passport.authenticate("google", (err, user, info) => {
-    if (err) {
-      console.log("Authentication failed:", err.message);
-      return res.redirect("http://localhost:5173/login?error=Not+Allowed"); // Redirect with an error query param
-    }
-    if (!user) {
-      console.log("No user found");
-      return res.redirect("http://localhost:5173/login");
-    }
-    req.login(user, (err) => {
-      if (err) {
-        console.log("Error during login:", err);
-        return next(err);
-      }
-      console.log("User authenticated, redirecting...");
-      res.redirect("http://localhost:5173/");
-    });
-  })(req, res, next);
-});
+// Helper Functions
+const redirectOnError = (url, error) => `${url}/login${error ? `?error=${error}` : ''}`;
+const authenticate = (strategy, options = {}) => passport.authenticate(strategy, options);
 
-app.get("/auth/google", (req, res, next) => {
-  console.log("Starting Google authentication...");
-  passport.authenticate("google", {
-    scope: ["profile"],
-  })(req, res, next);
-});
+// Routes
+// Use descriptive route names and separate route handlers for better readability and maintainability
+app.get('/auth/google', authenticate('google', { scope: ['profile'] }));
+app.get('/auth/google/redirect', authenticate('google'), handleGoogleRedirect);
+app.get('/auth/logout', handleLogout);
+app.get('/api/isAuthenticated', checkAuthentication);
+app.get('/api/profile', isAuthenticated, getProfile);
+app.get('/some-protected-route', isAuthenticated, handleProtectedRoute);
 
-app.get("/auth/logout", (req, res) => {
-  console.log("Loggin out user...");
-  req.logout(() => {
-    req.session.destroy((error) => {
-      if (err) {
-        return res.send("Error logging out");
-      }
-    });
-    res.clearCookie("connect.sid"); // If you're using express-session, this clears the default session cookie name
-    // Redirect the user to another page after logout
-    res.redirect("http://localhost:5173/");
-  });
-});
-
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).send("Not authenticated");
+// Route Handlers
+function handleGoogleRedirect(req, res) {
+  req.isAuthenticated()
+    ? res.redirect(CLIENT_URL)
+    : res.redirect(redirectOnError(CLIENT_URL, 'Not+Allowed'));
 }
 
-app.get("/api/isAuthenticated", (req, res) => {
-  console.log("Checking if authenticated...");
-  if (req.isAuthenticated()) {
-    res.json({ isAuthenticated: true });
-  } else {
-    res.json({ isAuthenticated: false });
-  }
-});
+function handleLogout(req, res) {
+  req.logout();
+  req.session.destroy(err => {
+    if (err) return res.send('Error logging out');
+    res.clearCookie('connect.sid');
+    res.redirect(CLIENT_URL);
+  });
+}
 
-app.get("/api/profile", isAuthenticated, (req, res) => {
-  console.log("Getting profile...");
-  if (req.user) {
-    res.json({ user: req.user });
-  } else {
-    res.json({ user: null });
-  }
-});
+function checkAuthentication(req, res) {
+  res.json({ isAuthenticated: req.isAuthenticated() });
+}
 
-// You can use this middleware for routes that should be protected
-app.get("/some-protected-route", isAuthenticated, (req, res) => {
-  // Handle your protected route logic here
-});
+function getProfile(req, res) {
+  res.json({ user: req.user || null });
+}
 
-const PORT = process.env.PORT || 5090;
+function handleProtectedRoute(req, res) {
+  // Your protected route logic here
+}
 
+// Middleware to check authentication
+function isAuthenticated(req, res, next) {
+  req.isAuthenticated() ? next() : res.status(401).send('Not authenticated');
+}
+
+// Server start
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
