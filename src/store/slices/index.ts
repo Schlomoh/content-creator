@@ -1,1 +1,1 @@
-export * from './defaultSlice';
+export * from "./defaultSlice";

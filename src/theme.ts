@@ -1,3 +1,8 @@
-import {extendTheme} from "@mui/joy";
+import { extendTheme } from "@mui/joy";
 
-export const theme = extendTheme({})
+export const theme = extendTheme({
+  colorSchemes: {
+    dark: {},
+    light: {},
+  },
+});
