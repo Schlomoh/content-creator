@@ -1,26 +1,22 @@
-import { Button, styled } from "@mui/joy";
-import { useIsAuthenticatedQuery } from "@/store/api";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { initiateLoginWithTwitter, logout } from "@/store/thunks/authThunks";
 
-const StyledLoginButton = styled(Button)`
-  transition: all 0.3s;
-`;
+import useGetUser from "@/store/utils/useGetUser";
+import { Button } from "@mui/joy";
 
-const LoginButton = () => {
-  const { data: isAuthenticated } = useIsAuthenticatedQuery();
+function LoginButton() {
+  const dispatch: AppDispatch = useDispatch();
+  const { user } = useGetUser();
+
+  const handleLogin = () => dispatch(initiateLoginWithTwitter());
+  const handleLogout = () => dispatch(logout());
 
   return (
-    <StyledLoginButton
-      variant="outlined"
-      size="sm"
-      color="neutral"
-      onClick={() =>
-        (window.location.href = isAuthenticated
-          ? "/auth/logout"
-          : "/auth/google")
-      }
-    >
-      {isAuthenticated ? "Logout" : "Login with Google"}
-    </StyledLoginButton>
+    <Button variant="outlined" onClick={user ? handleLogout : handleLogin} color='neutral'>
+      {user ? "Log out" : "Login with Twitter"}
+    </Button>
   );
-};
+}
+
 export default LoginButton;

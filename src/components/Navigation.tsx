@@ -1,4 +1,4 @@
-import { Box, Card, styled } from "@mui/joy";
+import { Card, styled } from "@mui/joy";
 import { LoginButton } from "@/components/index.ts";
 
 const NavBar = styled("nav")`
@@ -21,14 +21,11 @@ const NavCard = styled(Card)`
 
 const Navigation = () => {
   return (
-    <>
-      <NavBar>
-        <NavCard color="neutral">
-          <LoginButton />
-        </NavCard>
-      </NavBar>
-      <Box sx={{ height: "5rem" }}></Box>
-    </>
+    <NavBar>
+      <NavCard variant="soft">
+        <LoginButton />
+      </NavCard>
+    </NavBar>
   );
 };
 

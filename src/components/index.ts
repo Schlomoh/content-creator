@@ -1,5 +1,7 @@
-export {default as Dashboard, MainContainer} from './Dashboard.tsx'
-export {default as PrivateWrapper} from './PrivateWrapper.tsx';
-export {default as LoginButton} from './LoginButton.tsx'
-export {default as LoginPage} from './LoginPage.tsx'
-export {default as Navigation} from './Navigation.tsx'
+export { default as CreationModal } from "./CreationModal";
+export { default as StrategyModal } from "./StrategyModal";
+export { default as BoldPageInfo } from "./BoldPageInfo";
+export { default as PrivateWrapper } from "./PrivateWrapper";
+export { default as LoginButton } from "./LoginButton";
+export { default as MainContainer } from "./MainContainer";
+export { default as Navigation } from "./Navigation";

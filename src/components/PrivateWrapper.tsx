@@ -1,24 +1,14 @@
 import { PropsWithChildren } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useIsAuthenticatedQuery } from "@/store/api";
-import { Typography } from "@mui/joy";
+import { BoldPageInfo } from ".";
+import { Navigate } from "react-router-dom";
+import useGetUser from "@/store/utils/useGetUser";
 
 const PrivateWrapper = ({ children }: PropsWithChildren) => {
-  const { data: isAuthenticated, isLoading } = useIsAuthenticatedQuery();
-  const location = useLocation();
+  const { user, loading } = useGetUser();
 
-  // If data is not yet available, show the "Authenticating..." message
-  if (isLoading) {
-    return <Typography>Authenticating...</Typography>;
-  }
-
-  // If data is available and authenticated is true, render children
-  if (isAuthenticated) {
-    return children;
-  }
-
-  // If data is available and authenticated is false, redirect to login
-  return <Navigate to="/login" state={{ from: location }} replace />;
+  if (loading) return <BoldPageInfo text="Authenticating..." />;
+  if (user) return children;
+  return <Navigate to="/login" replace />;
 };
 
 export default PrivateWrapper;

@@ -27,3 +27,4 @@ dist-ssr
 service_account.json
 dist
 lib
+.firebase

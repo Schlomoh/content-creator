@@ -1,19 +1,37 @@
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-import userApi from "./api/userApi.ts";
-import defaultSlice from "./slices/defaultSlice.ts";
+import { authSlice, creationSlice, strategySlice } from "./slices";
+import creationApi from "./api/creationApi"; // Removed `.ts` as it's unnecessary in imports
 
-export const store = configureStore({
-    reducer: combineReducers({
-        [userApi.reducerPath]: userApi.reducer,
-        [defaultSlice.name]: defaultSlice.reducer
-    }),
+type RootState = ReturnType<typeof rootReducer>;
+type AppDispatch = typeof store.dispatch;
 
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(
-            userApi.middleware
-        )
-})
+// Abstract rootReducer for better organization
+const getRootReducer = () => {
+  return combineReducers({
+    [authSlice.name]: persistReducer(
+      { key: "auth", storage },
+      authSlice.reducer
+    ),
+    [creationSlice.name]: creationSlice.reducer,
+    [strategySlice.name]: strategySlice.reducer,
+    [creationApi.reducerPath]: creationApi.reducer,
+  });
+};
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+const rootReducer = getRootReducer();
+
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(creationApi.middleware);
+  },
+});
+
+const persistor = persistStore(store);
+
+export { store, persistor, type RootState, type AppDispatch };
