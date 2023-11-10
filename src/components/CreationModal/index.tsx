@@ -1,13 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
 import { FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, DialogActions, DialogTitle, Drawer } from "@mui/joy";
-
 import {
-  creationPhaseSelector,
-  nextPhase,
-  previousPhase,
-} from "@/store/slices";
+  Box,
+  Button,
+  DialogActions,
+  DialogTitle,
+  Drawer,
+  ModalClose,
+} from "@mui/joy";
+
+import { modalPhaseSelector, nextPhase, previousPhase } from "@/store/slices";
+import { createContentBatch, updateContentBatch } from "@/store/thunks";
+import { AppDispatch } from "@/store";
 
 import GeneralSettings from "./GeneralSettings";
 import NewsSettings from "./NewsSettings";
@@ -18,13 +23,14 @@ interface Props {
 }
 
 const CreationModal = ({ onClose, open }: Props) => {
-  const dispatch = useDispatch();
-  const creationPhase = useSelector(creationPhaseSelector);
+  const dispatch: AppDispatch = useDispatch();
+  const { creationPhase } = useSelector(modalPhaseSelector);
 
-  const Content = [GeneralSettings, NewsSettings][creationPhase];
+  const Content = [GeneralSettings, NewsSettings, Box][creationPhase];
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    dispatch(updateContentBatch());
     dispatch(nextPhase());
   }
 
@@ -38,6 +44,7 @@ const CreationModal = ({ onClose, open }: Props) => {
       size="lg"
     >
       <DialogTitle>Content Creation</DialogTitle>
+      <ModalClose />
       <form
         onSubmit={handleSubmit}
         style={{

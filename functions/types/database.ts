@@ -1,3 +1,5 @@
+import { ArticlesEntity } from "./news";
+
 export interface Database {
   strategy: Strategy;
   content: ContentBatch[];
@@ -8,12 +10,14 @@ interface Strategy {
   ai: StrategyAiResult;
 }
 
-interface ContentBatch {
+export interface ContentBatch {
+  batchId: string;
   dateTime: string;
   finished: boolean;
   topic: string;
   thoughts: string;
-  selectedArticles: Article[];
+  postAmount: number;
+  selectedArticles: ArticlesEntity[];
   selectedPersonalStories: PersonalStory[];
   posts: Post[];
 }
@@ -29,17 +33,6 @@ interface StrategyAiResult {
   contentGuide: string;
 }
 
-interface Article {
-  source: Source;
-  author: string;
-  title: string;
-  description: string;
-  url: string;
-  urlToImage: string;
-  publishedAt: string;
-  content: string;
-}
-
 interface PersonalStory {
   title: string;
   content: string;
@@ -50,9 +43,4 @@ interface Post {
   image: string;
   link: string;
   hashtags: string[];
-}
-
-export interface Source {
-  id: string;
-  name: string;
 }

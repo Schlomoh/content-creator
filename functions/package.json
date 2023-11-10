@@ -27,10 +27,7 @@
     "firebase-admin": "^11.11.0",
     "firebase-functions": "^4.4.1",
     "morgan": "^1.10.0",
-    "openai": "^4.13.0",
-    "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-twitter": "^1.0.4"
+    "openai": "^4.13.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.2",
@@ -45,9 +42,6 @@
     "@types/express-session": "^1.17.9",
     "@types/morgan": "^1.9.7",
     "@types/node": "^20.8.8",
-    "@types/passport": "^1.0.14",
-    "@types/passport-google-oauth20": "^2.0.13",
-    "@types/passport-twitter": "^1.0.39",
     "concurrently": "^8.2.2",
     "rollup-plugin-dotenv": "^0.5.0"
   }

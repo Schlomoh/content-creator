@@ -2,7 +2,6 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import getBackendUrl from "./getBackendUrl";
 import { auth } from "./firebaseSetup";
 
-
 // Separate base query configuration to its own function
 const baseQueryWithAuth = (mainSlug: string) => {
   return fetchBaseQuery({

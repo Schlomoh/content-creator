@@ -8,6 +8,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  ModalClose,
   Stack,
   Textarea,
 } from "@mui/joy";
@@ -52,9 +53,10 @@ const StrategyModal = ({ onClose, open }: Props) => {
       aria-describedby="modal-desc"
       open={open}
       onClose={onClose}
-      anchor="right"
+      anchor="left"
       size="lg"
     >
+      <ModalClose />
       <DialogTitle>Content Strategy</DialogTitle>
       <DialogContent sx={{ flex: "1 0 0" }}>
         <Stack direction="column" spacing={4} p={2}>

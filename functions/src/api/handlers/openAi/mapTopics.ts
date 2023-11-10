@@ -12,7 +12,7 @@ const constructMessages = (
 ): ChatCompletionMessageParam[] => [
   {
     role: "user",
-    content: `The chosen topic is: ${topic}. The thoughts are the following: ${
+    content: `The user wants to know about the topic: ${topic}. Their thoughts are the following: ${
       thoughts || ""
     }.`,
   },
@@ -42,6 +42,7 @@ async function mapTopics(
   thoughts?: string
 ): Promise<{ query: string } | null> {
   const messages = constructMessages(topic, thoughts);
+  console.log(messages)
 
   // Fetch completion
   const chatCompletion = await openai.chat.completions.create({

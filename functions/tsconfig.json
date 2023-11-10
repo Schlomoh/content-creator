@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,7 +12,12 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "outDir": "lib",
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    /* Custom resolve */
+    "paths": {
+      "@/types/*": ["./types/*"],
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src", "service_account.json"]
+  "include": ["src", "types", "service_account.json"]
 }

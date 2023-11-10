@@ -1,66 +1,71 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "@/store";
-import { ArticlesEntity } from "../types/news";
 
-export interface GeneralSettings {
-  topic: string;
-  thoughts: string;
-  postAmount: number;
+import { ContentBatch } from "@/server/types/database";
+
+export type GeneralSettings = Pick<
+  ContentBatch,
+  "topic" | "thoughts" | "postAmount"
+>;
+
+export type NewsSettings = Pick<ContentBatch, "selectedArticles">;
+
+interface CreationState {
+  creationData: Partial<ContentBatch>;
+  unfinishedBatches: ContentBatch[];
 }
-
-export interface NewsSettings {
-  derivedQuery: string;
-  derivedCategory: string;
-  newsArticles?: ArticlesEntity[];
-}
-
-interface CreationPhase {
-  phase: number;
-}
-
-type CreationState = CreationPhase & GeneralSettings & NewsSettings;
 
 const initialState: CreationState = {
-  topic: "",
-  thoughts: "",
-  postAmount: 3,
-  derivedQuery: "",
-  derivedCategory: "",
-  newsArticles: [],
-  phase: 0,
+  creationData: {
+    batchId: "",
+    finished: false,
+    topic: "",
+    thoughts: "",
+    postAmount: 3,
+    selectedArticles: [],
+  },
+  unfinishedBatches: [],
 };
 
 const creationSlice = createSlice({
   name: "creationSlice",
   initialState,
   reducers: {
-    setSettings: (state, action: PayloadAction<Partial<CreationState>>) => {
-      Object.assign(state, action.payload);
+    setSettings: (
+      state: CreationState,
+      action: PayloadAction<Partial<ContentBatch>>
+    ) => {
+      state.creationData = Object.assign(state.creationData, action.payload);
     },
-    nextPhase: (state) => {
-      state.phase += 1;
+    setUnfinishedBatches: (
+      state: CreationState,
+      action: PayloadAction<ContentBatch[]>
+    ) => {
+      state.unfinishedBatches = action.payload;
     },
-    previousPhase: (state) => {
-      state.phase -= 1;
+
+    resetCreationData: (state) => {
+      Object.assign(state.creationData, initialState.creationData);
     },
   },
 });
 
 export const creationSelector = createSelector(
   (state: RootState) => state.creationSlice,
-  (slice: CreationState) => slice
-);
-
-export const creationPhaseSelector = createSelector(
-  (state: RootState) => state.creationSlice,
-  (slice: CreationState) => slice.phase
+  (slice: CreationState) => slice.creationData
 );
 
 export const creationNewsSelector = createSelector(
   (state: RootState) => state.creationSlice,
-  (slice: CreationState) => slice.newsArticles
+  (slice: CreationState) => slice.creationData.selectedArticles
+);
+
+export const unfinishedBatchesSelector = createSelector(
+  (state: RootState) => state.creationSlice,
+  (slice: CreationState) => slice.unfinishedBatches
 );
 
 export default creationSlice;
-export const { setSettings, nextPhase, previousPhase } = creationSlice.actions;
+export const { setSettings, setUnfinishedBatches, resetCreationData } =
+  creationSlice.actions;

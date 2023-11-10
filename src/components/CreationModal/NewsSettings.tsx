@@ -7,7 +7,7 @@ import {
   Typography,
   styled,
 } from "@mui/joy";
-import { ArticlesEntity } from "@/store/types/news";
+import { ArticlesEntity } from "@/server/types/news";
 import { useGetNewsQuery } from "@/store/api";
 import {
   creationNewsSelector,
@@ -51,24 +51,22 @@ const toggleArticleSelection = (
     ? selectedArticles.filter((item) => item.title !== article.title)
     : [...selectedArticles, article];
 
-  dispatch(setSettings({ newsArticles: newSelectedArticles }));
+  dispatch(setSettings({ selectedArticles: newSelectedArticles }));
 };
 
 // Main Components
 const ArticleCard = (article: ArticlesEntity) => {
   const dispatch = useDispatch();
   const selectedArticles = useSelector(creationNewsSelector) || [];
-  const isSelected: boolean =
-    selectedArticles?.some(
-      (item: ArticlesEntity) => item.title === article.title
-    ) ?? false;
+  const isSelected =
+    selectedArticles?.some((item) => item.title === article.title) ?? false;
 
   return (
     <SelectableCard
+      className={isSelected ? "selected" : ""}
       onClick={() =>
         toggleArticleSelection(isSelected, selectedArticles, article, dispatch)
       }
-      className={isSelected ? "selected" : ""}
     >
       <CardContent>
         <Typography level="title-md">{article.title}</Typography>
@@ -78,16 +76,20 @@ const ArticleCard = (article: ArticlesEntity) => {
         <Typography level="body-xs" color="neutral">
           {article.description}
         </Typography>
+        <Typography level="body-xs" color="neutral">
+          {article.source.name}
+        </Typography>
       </CardContent>
     </SelectableCard>
   );
 };
 
 const NewsSettings = () => {
-  const { topic, thoughts } = useSelector(creationSelector);
+  const { thoughts, topic } = useSelector(creationSelector);
+  const { selectedArticles } = useSelector(creationSelector);
   const { data: news, isLoading } = useGetNewsQuery(
-    { topic, thoughts },
-    { skip: !topic }
+    { topic: topic || "", thoughts: thoughts || "" },
+    { skip: !topic || !selectedArticles?.length }
   );
 
   const renderContent = () => {
@@ -97,8 +99,11 @@ const NewsSettings = () => {
         .map((_, index) => <LoadingCard key={index} />);
     }
 
-    return news?.articles?.map((article) => (
-      <ArticleCard {...article} key={article.title} />
+    const articles = selectedArticles?.length
+      ? selectedArticles
+      : news?.articles;
+    return articles?.map((article, i) => (
+      <ArticleCard {...article} key={article.title + i} />
     ));
   };
 

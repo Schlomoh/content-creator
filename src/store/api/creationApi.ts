@@ -1,8 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/dist/query/react";
-import { NewsResponse } from "../types/news";
+import { NewsResponse } from "@/server/types/news";
 import baseQueryWithAuth from "../utils/baseQueryWithAuth";
 
-const CONTENT_ENDPOINT = "/content";
+const CONTENT_ENDPOINT = "content";
 
 const creationApi = createApi({
   reducerPath: "creationApi",

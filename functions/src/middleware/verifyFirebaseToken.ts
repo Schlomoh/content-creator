@@ -21,7 +21,7 @@ const verifyFirebaseToken = (
     .auth()
     .verifyIdToken(token)
     .then((decodedToken) => {
-      req.user = decodedToken;
+      res.locals.decodedToken = decodedToken;
       next();
     })
     .catch((error) => {

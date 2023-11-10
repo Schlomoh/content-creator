@@ -1,4 +1,4 @@
-import { NewsResponse } from "./news";
+import { NewsResponse } from "@/types/news";
 
 const API_URL = "https://newsapi.org/v2/everything";
 const API_KEY = process.env.NEWS_API_KEY || "";
