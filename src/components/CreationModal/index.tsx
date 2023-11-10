@@ -11,7 +11,7 @@ import {
 } from "@mui/joy";
 
 import { modalPhaseSelector, nextPhase, previousPhase } from "@/store/slices";
-import { createContentBatch, updateContentBatch } from "@/store/thunks";
+import { updateContentBatch } from "@/store/thunks";
 import { AppDispatch } from "@/store";
 
 import GeneralSettings from "./GeneralSettings";
