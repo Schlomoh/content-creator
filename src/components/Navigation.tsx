@@ -1,5 +1,5 @@
 import { Card, styled } from "@mui/joy";
-import { LoginButton } from "@/components/index.ts";
+import { LoginButton } from "@/components";
 
 const NavBar = styled("nav")`
   position: fixed;

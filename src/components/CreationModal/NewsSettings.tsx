@@ -41,43 +41,43 @@ const LoadingCard = () => (
   </SelectableCard>
 );
 
-const toggleArticleSelection = (
+const useToggleArticleSelection = (
   isSelected: boolean,
   selectedArticles: ArticlesEntity[],
-  article: ArticlesEntity,
-  dispatch: ReturnType<typeof useDispatch>
+  article: ArticlesEntity
 ) => {
-  const newSelectedArticles = isSelected
-    ? selectedArticles.filter((item) => item.title !== article.title)
-    : [...selectedArticles, article];
+  const dispatch = useDispatch();
+  return () => {
+    const newSelectedArticles = isSelected
+      ? selectedArticles.filter((item) => item.title !== article.title)
+      : [...selectedArticles, article];
 
-  dispatch(setSettings({ selectedArticles: newSelectedArticles }));
+    dispatch(setSettings({ selectedArticles: newSelectedArticles }));
+  };
 };
 
 // Main Components
 const ArticleCard = (article: ArticlesEntity) => {
-  const dispatch = useDispatch();
+  const { title, author, description, source } = article;
   const selectedArticles = useSelector(creationNewsSelector) || [];
-  const isSelected =
-    selectedArticles?.some((item) => item.title === article.title) ?? false;
-
+  const isSelected = selectedArticles.some((item) => item.title === title);
+  const onClick = useToggleArticleSelection(
+    isSelected,
+    selectedArticles,
+    article
+  );
   return (
-    <SelectableCard
-      className={isSelected ? "selected" : ""}
-      onClick={() =>
-        toggleArticleSelection(isSelected, selectedArticles, article, dispatch)
-      }
-    >
+    <SelectableCard className={isSelected ? "selected" : ""} onClick={onClick}>
       <CardContent>
-        <Typography level="title-md">{article.title}</Typography>
+        <Typography level="title-md">{title}</Typography>
         <Typography level="body-sm" color="neutral">
-          {article.author}
+          {author}
         </Typography>
         <Typography level="body-xs" color="neutral">
-          {article.description}
+          {description}
         </Typography>
         <Typography level="body-xs" color="neutral">
-          {article.source.name}
+          {source.name}
         </Typography>
       </CardContent>
     </SelectableCard>
@@ -86,10 +86,9 @@ const ArticleCard = (article: ArticlesEntity) => {
 
 const NewsSettings = () => {
   const { thoughts, topic } = useSelector(creationSelector);
-  const { selectedArticles } = useSelector(creationSelector);
   const { data: news, isLoading } = useGetNewsQuery(
     { topic: topic || "", thoughts: thoughts || "" },
-    { skip: !topic || !selectedArticles?.length }
+    { skip: !topic }
   );
 
   const renderContent = () => {
@@ -99,10 +98,7 @@ const NewsSettings = () => {
         .map((_, index) => <LoadingCard key={index} />);
     }
 
-    const articles = selectedArticles?.length
-      ? selectedArticles
-      : news?.articles;
-    return articles?.map((article, i) => (
+    return news?.articles?.map((article, i) => (
       <ArticleCard {...article} key={article.title + i} />
     ));
   };
