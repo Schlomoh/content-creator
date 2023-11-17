@@ -18,7 +18,6 @@ interface CreationState {
 
 const initialState: CreationState = {
   creationData: {
-    batchId: "",
     finished: false,
     topic: "",
     thoughts: "",
@@ -32,19 +31,18 @@ const creationSlice = createSlice({
   name: "creationSlice",
   initialState,
   reducers: {
-    setSettings: (
-      state: CreationState,
-      action: PayloadAction<Partial<ContentBatch>>
-    ) => {
-      state.creationData = Object.assign(state.creationData, action.payload);
-    },
     setUnfinishedBatches: (
       state: CreationState,
       action: PayloadAction<ContentBatch[]>
     ) => {
       state.unfinishedBatches = action.payload;
     },
-
+    setSettings: (
+      state: CreationState,
+      action: PayloadAction<Partial<ContentBatch>>
+    ) => {
+      Object.assign(state.creationData, action.payload);
+    },
     resetCreationData: (state) => {
       Object.assign(state.creationData, initialState.creationData);
     },
