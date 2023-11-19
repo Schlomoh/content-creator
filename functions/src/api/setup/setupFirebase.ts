@@ -1,11 +1,7 @@
 import admin from "firebase-admin";
-import path from "path";
+import serviceAccount from "../../../service_account.json";
 
 // Initialize Firebase Admin SDK
-const adminApp = admin.initializeApp({
-  credential: admin.credential.cert(
-    path.resolve(__dirname, "../service_account.json")
-  ),
+export const firebaseApp = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
 });
-
-export default adminApp;

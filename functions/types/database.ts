@@ -12,7 +12,7 @@ interface Strategy {
 
 export interface ContentBatch {
   batchId: string;
-  dateTime: string;
+  date: number;
   finished: boolean;
   topic: string;
   thoughts: string;

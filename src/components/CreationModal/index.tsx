@@ -16,6 +16,7 @@ import { AppDispatch } from "@/store";
 
 import GeneralSettings from "./GeneralSettings";
 import NewsSettings from "./NewsSettings";
+import ErrorBoundary from "./ErrorBoundary";
 
 interface Props {
   onClose: () => void;
@@ -53,20 +54,22 @@ const CreationModal = ({ onClose, open }: Props) => {
           height: "inherit",
         }}
       >
-        <Box p={2} sx={{ flex: "1 0 0", overflow: "auto" }}>
-          <Content />
-        </Box>
-        <DialogActions buttonFlex={1} sx={{ p: 2, gap: 2 }}>
-          <Button type="submit" disabled={creationPhase === 2}>
-            Next
-          </Button>
-          <Button
-            disabled={creationPhase === 0}
-            onClick={() => dispatch(previousPhase())}
-          >
-            Back
-          </Button>
-        </DialogActions>
+        <ErrorBoundary>
+          <Box p={2} sx={{ flex: "1 0 0", overflow: "auto" }}>
+            <Content />
+          </Box>
+          <DialogActions buttonFlex={1} sx={{ p: 2, gap: 2 }}>
+            <Button type="submit" disabled={creationPhase === 2}>
+              Next
+            </Button>
+            <Button
+              disabled={creationPhase === 0}
+              onClick={() => dispatch(previousPhase())}
+            >
+              Back
+            </Button>
+          </DialogActions>
+        </ErrorBoundary>
       </form>
     </Drawer>
   );

@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import { authSlice, creationSlice, strategySlice, modalsSlice } from "./slices";
 import creationApi from "./api/creationApi";
+import strategyApi from "./api/strategyApi";
 
 type RootState = ReturnType<typeof rootReducer>;
 type AppDispatch = typeof store.dispatch;
@@ -18,6 +19,7 @@ const getRootReducer = () => {
     [creationSlice.name]: creationSlice.reducer,
     [strategySlice.name]: strategySlice.reducer,
     [creationApi.reducerPath]: creationApi.reducer,
+    [strategyApi.reducerPath]: strategyApi.reducer,
   });
 };
 
@@ -28,7 +30,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(creationApi.middleware);
+    }).concat(creationApi.middleware, strategyApi.middleware);
   },
 });
 

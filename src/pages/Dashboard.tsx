@@ -14,6 +14,7 @@ import {
   ListItemDecorator,
   Typography,
 } from "@mui/joy";
+import humantime from "human-date";
 
 import { CreationModal, StrategyModal, MainContainer } from "@/components";
 import useGetUser from "@/store/utils/useGetUser";
@@ -25,7 +26,8 @@ import {
   toggleStrategyModal,
 } from "@/store/slices";
 import {
-  getUnfinishedBatches,
+  listenForContentStrategy,
+  listenForUnfinishedBatches,
   resetCreation,
 } from "@/store/thunks";
 import { AppDispatch } from "@/store";
@@ -38,30 +40,58 @@ const UnfinishedBatchesList = () => {
     dispatch(resetCreation());
     dispatch(setSettings(unfinishedBatches[index]));
     dispatch(toggleCreationModal());
-
   }
 
   useEffect(() => {
-    dispatch(getUnfinishedBatches());
-  }, []);
+    const unsubscribeUnfinishedBatches = dispatch(listenForUnfinishedBatches);
+    const unsubscribeContentStrategy = dispatch(listenForContentStrategy);
+    return () => {
+      unsubscribeUnfinishedBatches();
+      unsubscribeContentStrategy();
+    };
+  }, [dispatch]);
+  console.log();
 
   return (
     <List>
       {unfinishedBatches.length > 0 ? (
         unfinishedBatches.map((batch, index) => (
-          <ListItem key={index}>
+          <ListItem key={index} title={`${batch.topic} - ${batch.thoughts}`}>
             <ListItemButton onClick={() => handleListItemClick(index)}>
               <ListItemDecorator>
                 <span className="material-icons-round">article</span>
               </ListItemDecorator>
-              <ListItemContent>
-                {batch.topic} / {batch.thoughts}
+              <ListItemContent
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  textWrap: "nowrap",
+                }}
+              >
+                <Typography level="body-sm" display="inline">
+                  Topic {"- "}
+                </Typography>
+                <strong>{batch.topic} · </strong>
+                <Typography level="body-sm" display="inline">
+                  Thoughts {"- "}
+                </Typography>
+                <strong>{batch.thoughts}</strong>
               </ListItemContent>
+              <Typography
+                level="body-sm"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  textWrap: "nowrap",
+                }}
+              >
+                {humantime.relativeTime(new Date(batch?.date))}
+              </Typography>
             </ListItemButton>
           </ListItem>
         ))
       ) : (
-        <></>
+        <Typography level="body-md">No recent batches.</Typography>
       )}
     </List>
   );

@@ -19,5 +19,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "types", "service_account.json"]
+  "include": ["src", "."]
 }

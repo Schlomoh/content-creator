@@ -12,9 +12,7 @@ const constructMessages = (
 ): ChatCompletionMessageParam[] => [
   {
     role: "user",
-    content: `The user wants to know about the topic: ${topic}. Their thoughts are the following: ${
-      thoughts || ""
-    }.`,
+    content: `The user wants to know about the topic: ${topic}. Specific thoughts and interest are the following: ${thoughts}.`,
   },
 ];
 
@@ -23,13 +21,13 @@ const functionsMeta = [
   {
     name: "map_topic_to_category",
     description:
-      "Based on the given topic and users thoughts find the best fitting query, later being used with the newsapi.org",
+      "Based on the given topic and users thoughts finds the best fitting query, later being used with the newsapi.org",
     parameters: {
       type: "object",
       properties: {
         query: {
           type: "string",
-          description: `Various search criteria can be defined here...`,
+          description: `The newsapi.org query to fetch the most recent news related to the topic`,
         },
       },
       required: ["query"],
@@ -42,11 +40,11 @@ async function mapTopics(
   thoughts?: string
 ): Promise<{ query: string } | null> {
   const messages = constructMessages(topic, thoughts);
-  console.log(messages)
+  console.log(messages);
 
   // Fetch completion
   const chatCompletion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-0613",
+    model: "gpt-3.5-turbo-1106",
     messages,
     functions: functionsMeta,
     function_call: "auto",

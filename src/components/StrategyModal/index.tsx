@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import {
   Button,
+  Card,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -11,6 +12,7 @@ import {
   ModalClose,
   Stack,
   Textarea,
+  Typography,
 } from "@mui/joy";
 
 import PostStructure from "./PostStructure";
@@ -18,6 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPersona, strategySelector } from "@/store/slices";
 import { ChangeEvent, useEffect } from "react";
 import { useSetStrategyMutation } from "@/store/api/strategyApi";
+import { updateContentStrategy } from "@/store/thunks";
+import { AppDispatch } from "@/store";
 
 interface Props {
   onClose: () => void;
@@ -25,11 +29,11 @@ interface Props {
 }
 
 const StrategyModal = ({ onClose, open }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const strategy = useSelector(strategySelector);
-  const [send, { isLoading, isSuccess }] = useSetStrategyMutation();
+  const [send, { data, isLoading, isSuccess }] = useSetStrategyMutation();
 
-  const { persona, contentStructure } = strategy;
+  const { persona, generalTopics, structures } = strategy;
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
     dispatch(setPersona(event.target.value));
@@ -39,13 +43,13 @@ const StrategyModal = ({ onClose, open }: Props) => {
     send(strategy);
   }
 
-  const disableButton = !persona && !contentStructure[0];
+  const disableButton = !persona && !generalTopics[0];
 
   useEffect(() => {
-    if (isSuccess) {
-      onClose();
+    if (isSuccess && data) {
+      dispatch(updateContentStrategy(data));
     }
-  }, [isSuccess, onClose]);
+  }, [isSuccess, data, dispatch]);
 
   return (
     <Drawer
@@ -77,10 +81,18 @@ const StrategyModal = ({ onClose, open }: Props) => {
 
           <FormControl>
             <FormLabel>
-              Define the Structure each post should roughly follow
+              Define general topics to guide content creation
             </FormLabel>
             <PostStructure />
           </FormControl>
+        </Stack>
+        <Stack p={2} spacing={2} direction="column" sx={{ flex: "1 0 0", overflow: "auto" }}>
+          {structures.map((structure, index) => (
+            <Card key={index}>
+              <Typography level="body-md">{structure.name}</Typography>
+              <Typography level="body-sm">{structure.structure}</Typography>
+            </Card>
+          ))}
         </Stack>
       </DialogContent>
       <DialogActions buttonFlex={1} sx={{ p: 2, gap: 2 }}>

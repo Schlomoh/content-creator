@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent } from "react";
 import { Card, IconButton, Input, Stack, Typography, styled } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-import { setContentStructure, strategySelector } from "@/store/slices";
+import { setGeneralTopics, strategySelector } from "@/store/slices";
 
 // Style components
 const StrategyItemCard = styled(Card)`
@@ -25,19 +25,19 @@ const deleteItemAt = (arr: string[], index: number) =>
 // Main component
 const PostStructure = () => {
   const dispatch = useDispatch();
-  const { contentStructure: structure } = useSelector(strategySelector);
+  const { generalTopics: topics } = useSelector(strategySelector);
 
   // Handles the change of input and updates the structure state
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    dispatch(setContentStructure([...structure.slice(0, -1), value]));
+    dispatch(setGeneralTopics([...topics.slice(0, -1), value]));
   };
 
   // Handles blur event and updates the structure state
   const handleBlur = () => {
-    const lastElement = structure[structure.length - 1];
+    const lastElement = topics[topics.length - 1];
     if (lastElement !== "") {
-      dispatch(setContentStructure([...structure, ""]));
+      dispatch(setGeneralTopics([...topics, ""]));
     }
   };
 
@@ -48,43 +48,41 @@ const PostStructure = () => {
     }
   };
 
-  const displayedStructure = structure.slice(0, -1);
-  const currentInputValue = structure[structure.length - 1] || "";
+  const displayedStructure = topics.slice(0, -1);
+  const currentInputValue = topics[topics.length - 1] || "";
 
   return (
-    <Card variant="soft">
-      <Stack direction={"column"} spacing={1}>
-        {displayedStructure.map((item, index) => (
-          <StrategyItemCard key={index} variant="plain" title={item}>
-            {/* Converts the item to uppercase */}
-            <StrategyItemText level="body-md">
-              {item.toLocaleUpperCase()}
-            </StrategyItemText>
-            {/* Delete button */}
-            <IconButton
-              size="sm"
-              onClick={() =>
-                dispatch(setContentStructure(deleteItemAt(structure, index)))
-              }
-            >
-              <span className="material-icons-round">delete</span>
-            </IconButton>
-          </StrategyItemCard>
-        ))}
+    <Stack direction={"column"} spacing={1}>
+      {displayedStructure.map((item, index) => (
+        <StrategyItemCard key={index} variant="soft" title={item}>
+          {/* Converts the item to uppercase */}
+          <StrategyItemText level="body-md">
+            {item.toLocaleUpperCase()}
+          </StrategyItemText>
+          {/* Delete button */}
+          <IconButton
+            size="sm"
+            onClick={() =>
+              dispatch(setGeneralTopics(deleteItemAt(topics, index)))
+            }
+          >
+            <span className="material-icons-round">delete</span>
+          </IconButton>
+        </StrategyItemCard>
+      ))}
 
-        <Input
-          onBlur={handleBlur}
-          variant="outlined"
-          name="structure"
-          type="text"
-          placeholder="Add a new structure element"
-          onChange={handleChange}
-          onKeyDown={handleEnter}
-          value={currentInputValue}
-          autoComplete="off"
-        />
-      </Stack>
-    </Card>
+      <Input
+        onBlur={handleBlur}
+        variant="outlined"
+        name="structure"
+        type="text"
+        placeholder="Add a new general topic"
+        onChange={handleChange}
+        onKeyDown={handleEnter}
+        value={currentInputValue}
+        autoComplete="off"
+      />
+    </Stack>
   );
 };
 

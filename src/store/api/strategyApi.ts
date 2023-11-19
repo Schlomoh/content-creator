@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/dist/query/react";
 import { StrategyState } from "../slices";
 import baseQueryWithAuth from "../utils/baseQueryWithAuth";
 
-const STRATEGY_ENDPOINT = "/strategy";
+const STRATEGY_ENDPOINT = "strategy";
 
 const strategyApi = createApi({
   reducerPath: "strategyApi",
@@ -14,7 +14,8 @@ const strategyApi = createApi({
     setStrategy: builder.mutation<void, StrategyState>({
       invalidatesTags: ["strategy"],
       query: (state) => ({
-        url: `/strategy`,
+        url: `/contentGuides`,
+        method: "POST",
         body: state,
       }),
     }),

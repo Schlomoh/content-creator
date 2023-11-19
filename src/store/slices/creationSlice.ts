@@ -4,13 +4,6 @@ import { RootState } from "@/store";
 
 import { ContentBatch } from "@/server/types/database";
 
-export type GeneralSettings = Pick<
-  ContentBatch,
-  "topic" | "thoughts" | "postAmount"
->;
-
-export type NewsSettings = Pick<ContentBatch, "selectedArticles">;
-
 interface CreationState {
   creationData: Partial<ContentBatch>;
   unfinishedBatches: ContentBatch[];

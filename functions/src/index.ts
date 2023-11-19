@@ -5,7 +5,7 @@ import functions from "firebase-functions";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { contentRoutes } from "./api/routes";
+import { contentRoutes, strategyRoutes } from "./api/routes";
 
 const app = express();
 
@@ -21,6 +21,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 const contentApp = app.use(contentRoutes);
+const strategyApp = app.use(strategyRoutes);
 
 // Export the Express server as a Firebase function
 exports.content = functions.https.onRequest(contentApp);
+exports.strategy = functions.https.onRequest(strategyApp);

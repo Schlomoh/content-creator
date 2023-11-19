@@ -28,3 +28,4 @@ service_account.json
 dist
 lib
 .firebase
+.rollup.cache

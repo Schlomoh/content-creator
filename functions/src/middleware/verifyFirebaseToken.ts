@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import adminApp from "../api/setup/setupFirebase";
+import { firebaseApp } from "../api/setup/setupFirebase";
 
 // Utility function to handle unauthorized access
 const handleUnauthorized = (res: Response): void => {
@@ -17,7 +17,7 @@ const verifyFirebaseToken = (
     return handleUnauthorized(res);
   }
 
-  adminApp
+  firebaseApp
     .auth()
     .verifyIdToken(token)
     .then((decodedToken) => {
