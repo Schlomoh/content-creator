@@ -1,15 +1,12 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "@/store";
+import { ContentStructure } from "@/server/types/database";
 
-export interface Structure {
-  name: string;
-  structure: string;
-}
 export interface StrategyState {
   persona: string;
   generalTopics: string[];
-  structures: Structure[];
+  structures: ContentStructure[];
 }
 
 const initialState: StrategyState = {
@@ -28,7 +25,7 @@ const strategySlice = createSlice({
     setGeneralTopics: (state, action: PayloadAction<string[]>) => {
       state.generalTopics = action.payload;
     },
-    setStructures: (state, action: PayloadAction<Structure[]>) => {
+    setStructures: (state, action: PayloadAction<ContentStructure[]>) => {
       state.structures = action.payload;
     },
   },

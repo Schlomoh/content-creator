@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
@@ -24,6 +24,7 @@ import {
   modalOpenSelector,
   toggleCreationModal,
   toggleStrategyModal,
+  setPhase,
 } from "@/store/slices";
 import {
   listenForContentStrategy,
@@ -33,13 +34,16 @@ import {
 import { AppDispatch } from "@/store";
 
 const UnfinishedBatchesList = () => {
+  const [times, setTimes] = useState<string[]>([]);
   const dispatch: AppDispatch = useDispatch();
   const unfinishedBatches = useSelector(unfinishedBatchesSelector);
+  const sortedBatches = [...unfinishedBatches].sort((a, b) => b.date - a.date);
 
   function handleListItemClick(index: number) {
     dispatch(resetCreation());
     dispatch(setSettings(unfinishedBatches[index]));
     dispatch(toggleCreationModal());
+    dispatch(setPhase(unfinishedBatches[index].phase));
   }
 
   useEffect(() => {
@@ -50,12 +54,25 @@ const UnfinishedBatchesList = () => {
       unsubscribeContentStrategy();
     };
   }, [dispatch]);
-  console.log();
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setTimes(
+        sortedBatches.map((batch) =>
+          humantime.relativeTime(new Date(batch.date))
+        )
+      );
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [times, sortedBatches]);
 
   return (
     <List>
       {unfinishedBatches.length > 0 ? (
-        unfinishedBatches.map((batch, index) => (
+        sortedBatches.map((batch, index) => (
           <ListItem key={index} title={`${batch.topic} - ${batch.thoughts}`}>
             <ListItemButton onClick={() => handleListItemClick(index)}>
               <ListItemDecorator>
@@ -65,6 +82,7 @@ const UnfinishedBatchesList = () => {
                 sx={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                   textWrap: "nowrap",
                 }}
               >
@@ -82,10 +100,11 @@ const UnfinishedBatchesList = () => {
                 sx={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                   textWrap: "nowrap",
                 }}
               >
-                {humantime.relativeTime(new Date(batch?.date))}
+                {times.length ? times[index] : "Loading..."}
               </Typography>
             </ListItemButton>
           </ListItem>

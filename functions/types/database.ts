@@ -18,10 +18,15 @@ export interface ContentBatch {
   thoughts: string;
   postAmount: number;
   selectedArticles: ArticlesEntity[];
-  selectedPersonalStories: PersonalStory[];
+  selectedContentStructures: ContentStructure[];
+  phase: number;
   posts: Post[];
 }
 
+export interface ContentStructure {
+  name: string;
+  outline: string;
+}
 interface StrategyUserSelection {
   persona: string;
   topics: string[];
@@ -31,11 +36,6 @@ interface StrategyAiResult {
   improvedPersona: string;
   postTypes: string[];
   contentGuide: string;
-}
-
-interface PersonalStory {
-  title: string;
-  content: string;
 }
 
 interface Post {

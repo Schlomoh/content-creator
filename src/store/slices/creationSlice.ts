@@ -16,6 +16,8 @@ const initialState: CreationState = {
     thoughts: "",
     postAmount: 3,
     selectedArticles: [],
+    selectedContentStructures: [],
+    phase: 0,
   },
   unfinishedBatches: [],
 };

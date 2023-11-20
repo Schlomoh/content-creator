@@ -17,6 +17,7 @@ import { AppDispatch } from "@/store";
 import GeneralSettings from "./GeneralSettings";
 import NewsSettings from "./NewsSettings";
 import ErrorBoundary from "./ErrorBoundary";
+import StructureSettings from "./StructureSettings";
 
 interface Props {
   onClose: () => void;
@@ -27,12 +28,14 @@ const CreationModal = ({ onClose, open }: Props) => {
   const dispatch: AppDispatch = useDispatch();
   const { creationPhase } = useSelector(modalPhaseSelector);
 
-  const Content = [GeneralSettings, NewsSettings, Box][creationPhase];
+  const Content = [GeneralSettings, NewsSettings, StructureSettings][
+    creationPhase
+  ];
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    dispatch(updateContentBatch());
     dispatch(nextPhase());
+    dispatch(updateContentBatch());
   }
 
   return (

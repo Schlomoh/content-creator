@@ -38,7 +38,7 @@ export const listenForContentStrategy = (dispatch: AppDispatch) => {
   const docRef = doc(collectionRef, "guides");
 
   return onSnapshot(docRef, (snapshot) => {
-    const guides = snapshot.data();
+    const guides = snapshot.data() as StrategyState;
     console.log(guides);
     if (!guides) return;
     dispatch(setStructures(guides?.structures));
@@ -54,8 +54,10 @@ export const updateContentBatch = createAsyncThunk(
     const date = Date.now();
 
     try {
-      const state = (getState() as RootState).creationSlice;
-      const data = { batchId, ...state.creationData, date };
+      const state = getState() as RootState;
+      const { creationData } = state.creationSlice;
+      const { phase } = state.modalsSlice.creationModal;
+      const data = { batchId, ...creationData, phase, date };
       const docRef = doc(firestore, "content", data.batchId);
 
       // set local and db state to new content data
@@ -70,8 +72,6 @@ export const updateContentBatch = createAsyncThunk(
 export const updateContentStrategy = createAsyncThunk<void, StrategyState>(
   "db/setContentStrategy",
   async (data) => {
-    console.log(data);
-
     try {
       const docRef = doc(firestore, "strategies", "guides");
       // set local and db state to new content data

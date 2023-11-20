@@ -1,3 +1,4 @@
+import { ContentStructure } from "@/types/database";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources";
 
@@ -35,7 +36,7 @@ const functionsMeta = [
                 type: "string",
                 description: `The title of the post structure`,
               },
-              structure: {
+              outline: {
                 type: "string",
                 description: `The outline of the post`,
               },
@@ -51,7 +52,7 @@ const functionsMeta = [
 async function createContentStrategy(
   persona: string,
   topicInterests: string
-): Promise<{ contentStrategy: { title: string; structure: string }[] } | null> {
+): Promise<{ contentStrategy: ContentStructure[] } | null> {
   const messages = constructMessages(persona, topicInterests);
   console.log(messages);
 

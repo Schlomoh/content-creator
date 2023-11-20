@@ -1,5 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
   Button,
   Card,
   DialogActions,
@@ -62,44 +66,57 @@ const StrategyModal = ({ onClose, open }: Props) => {
     >
       <ModalClose />
       <DialogTitle>Content Strategy</DialogTitle>
-      <DialogContent sx={{ flex: "1 0 0" }}>
-        <Stack direction="column" spacing={4} p={2}>
-          <FormControl>
-            <FormLabel>Describe the persona the AI should play</FormLabel>
-            <Textarea
-              minRows={2}
-              maxRows={4}
-              value={persona || ""}
-              onChange={handleChange}
-              autoComplete="off"
-              placeholder="e.g. a young programmer always on a new project"
-            ></Textarea>
-            <FormHelperText>
-              e.g. a young programmer always on a new project
-            </FormHelperText>
-          </FormControl>
+      <DialogContent>
+        <AccordionGroup size="md">
+          <Accordion>
+            <AccordionSummary>Edit Strategy</AccordionSummary>
+            <AccordionDetails>
+              <Stack direction="column" spacing={4} p={2}>
+                <FormControl>
+                  <FormLabel>Describe the persona the AI should play</FormLabel>
+                  <Textarea
+                    minRows={2}
+                    maxRows={4}
+                    value={persona || ""}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    placeholder="e.g. a young programmer always on a new project"
+                  ></Textarea>
+                  <FormHelperText>
+                    e.g. a young programmer always on a new project
+                  </FormHelperText>
+                </FormControl>
 
-          <FormControl>
-            <FormLabel>
-              Define general topics to guide content creation
-            </FormLabel>
-            <PostStructure />
-          </FormControl>
-        </Stack>
-        <Stack p={2} spacing={2} direction="column" sx={{ flex: "1 0 0", overflow: "auto" }}>
-          {structures.map((structure, index) => (
-            <Card key={index}>
-              <Typography level="body-md">{structure.name}</Typography>
-              <Typography level="body-sm">{structure.structure}</Typography>
-            </Card>
-          ))}
-        </Stack>
+                <FormControl>
+                  <FormLabel>
+                    Define general topics to guide content creation
+                  </FormLabel>
+                  <PostStructure />
+                </FormControl>
+                <Button
+                  disabled={disableButton || isLoading}
+                  onClick={handleClick}
+                >
+                  Save
+                </Button>
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion defaultExpanded>
+            <AccordionSummary>Post structures</AccordionSummary>
+            <AccordionDetails>
+              <Stack p={2} spacing={2} direction="column">
+                {structures.map((structure, index) => (
+                  <Card key={index}>
+                    <Typography level="body-md">{structure.name}</Typography>
+                    <Typography level="body-sm">{structure.outline}</Typography>
+                  </Card>
+                ))}
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        </AccordionGroup>
       </DialogContent>
-      <DialogActions buttonFlex={1} sx={{ p: 2, gap: 2 }}>
-        <Button disabled={disableButton || isLoading} onClick={handleClick}>
-          Save
-        </Button>
-      </DialogActions>
     </Drawer>
   );
 };
