@@ -1,17 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
+  Dropdown,
   Grid,
   List,
   ListItem,
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
   Typography,
 } from "@mui/joy";
 import humantime from "human-date";
@@ -29,6 +33,7 @@ import {
 import {
   listenForContentStrategy,
   listenForUnfinishedBatches,
+  removeContentBatch,
   resetCreation,
 } from "@/store/thunks";
 import { AppDispatch } from "@/store";
@@ -44,6 +49,13 @@ const UnfinishedBatchesList = () => {
     dispatch(setSettings(unfinishedBatches[index]));
     dispatch(toggleCreationModal());
     dispatch(setPhase(unfinishedBatches[index].phase));
+  }
+
+  function handleDeleteClick(event: MouseEvent, index: number) {
+    event.stopPropagation();
+    // delete unfinishedBatches[index];
+
+    dispatch(removeContentBatch(sortedBatches[index]));
   }
 
   useEffect(() => {
@@ -70,11 +82,14 @@ const UnfinishedBatchesList = () => {
   }, [times, sortedBatches]);
 
   return (
-    <List>
+    <List sx={{ gap: 1 }}>
       {unfinishedBatches.length > 0 ? (
         sortedBatches.map((batch, index) => (
           <ListItem key={index} title={`${batch.topic} - ${batch.thoughts}`}>
-            <ListItemButton onClick={() => handleListItemClick(index)}>
+            <ListItemButton
+              onClick={() => handleListItemClick(index)}
+              sx={{ borderRadius: 8, overflow: "hidden" }}
+            >
               <ListItemDecorator>
                 <span className="material-icons-round">article</span>
               </ListItemDecorator>
@@ -107,6 +122,27 @@ const UnfinishedBatchesList = () => {
                 {times.length ? times[index] : "Loading..."}
               </Typography>
             </ListItemButton>
+            <Dropdown>
+              <MenuButton
+                variant="plain"
+                color="neutral"
+                sx={{ m: -1, ml: 1, borderRadius: 8 }}
+              >
+                <span className="material-icons-round">more_horiz</span>
+              </MenuButton>
+              <Menu variant="soft" sx={{ translate: -8 }}>
+                <MenuItem
+                  onClick={(event) => handleDeleteClick(event, index)}
+                  color="danger"
+                  variant="plain"
+                >
+                  <ListItemDecorator>
+                    <span className="material-icons-round">delete_outline</span>
+                  </ListItemDecorator>
+                  Delete Batch
+                </MenuItem>
+              </Menu>
+            </Dropdown>
           </ListItem>
         ))
       ) : (
@@ -123,6 +159,7 @@ const Dashboard = () => {
   const { user } = useGetUser();
 
   function handleCreationCLick() {
+    dispatch(resetCreation());
     dispatch(toggleCreationModal());
   }
 

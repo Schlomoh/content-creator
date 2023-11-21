@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   query,
@@ -39,7 +40,6 @@ export const listenForContentStrategy = (dispatch: AppDispatch) => {
 
   return onSnapshot(docRef, (snapshot) => {
     const guides = snapshot.data() as StrategyState;
-    console.log(guides);
     if (!guides) return;
     dispatch(setStructures(guides?.structures));
     dispatch(setPersona(guides?.persona));
@@ -63,6 +63,18 @@ export const updateContentBatch = createAsyncThunk(
       // set local and db state to new content data
       dispatch(setSettings(data));
       await setDoc(docRef, data, { merge: true });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const removeContentBatch = createAsyncThunk(
+  "db/removeContentBatch",
+  async ({ batchId }: ContentBatch) => {
+    try {
+      const docRef = doc(firestore, "content", batchId);
+      await deleteDoc(docRef);
     } catch (error) {
       console.error(error);
     }
