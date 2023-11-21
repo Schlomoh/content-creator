@@ -69,8 +69,8 @@ const StrategyModal = ({ onClose, open }: Props) => {
         <AccordionGroup size="md">
           <Accordion>
             <AccordionSummary>Edit Strategy</AccordionSummary>
-            <AccordionDetails>
-              <Stack direction="column" p="1rem 0" spacing={4}>
+            <AccordionDetails sx={{ pt: 1.5 }}>
+              <Stack direction="column" spacing={4}>
                 <FormControl>
                   <FormLabel>Describe the persona the AI should play</FormLabel>
                   <Textarea
@@ -103,7 +103,7 @@ const StrategyModal = ({ onClose, open }: Props) => {
           </Accordion>
           <Accordion defaultExpanded>
             <AccordionSummary>Post structures</AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ pt: 1.5 }}>
               <Stack spacing={1.5} direction="column">
                 {structures.map((structure, index) => (
                   <Card key={index}>
