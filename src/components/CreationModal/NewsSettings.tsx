@@ -103,7 +103,7 @@ const NewsSettings = () => {
     ));
   };
 
-  return <Stack spacing={2}>{renderContent()}</Stack>;
+  return <Stack spacing={1.5}>{renderContent()}</Stack>;
 };
 
 export default NewsSettings;

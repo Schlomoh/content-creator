@@ -179,11 +179,6 @@ const Dashboard = () => {
                   Let's create some content.
                 </Typography>
               </CardContent>
-              <CardContent>
-                <Typography level="body-sm">
-                  You have {} followers right now.
-                </Typography>
-              </CardContent>
 
               <CardActions buttonFlex={1}>
                 <Button onClick={handleStrategyClick} color="primary">

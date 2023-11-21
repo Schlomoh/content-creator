@@ -52,7 +52,7 @@ const PostStructure = () => {
   const currentInputValue = topics[topics.length - 1] || "";
 
   return (
-    <Stack direction={"column"} spacing={1}>
+    <Stack direction={"column"} spacing={1.5}>
       {displayedStructure.map((item, index) => (
         <StrategyItemCard key={index} variant="soft" title={item}>
           {/* Converts the item to uppercase */}
@@ -66,7 +66,7 @@ const PostStructure = () => {
               dispatch(setGeneralTopics(deleteItemAt(topics, index)))
             }
           >
-            <span className="material-icons-round">delete</span>
+            <span className="material-icons-round">remove</span>
           </IconButton>
         </StrategyItemCard>
       ))}

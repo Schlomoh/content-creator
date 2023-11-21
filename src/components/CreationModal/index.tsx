@@ -58,10 +58,10 @@ const CreationModal = ({ onClose, open }: Props) => {
         }}
       >
         <ErrorBoundary>
-          <Box p={2} sx={{ flex: "1 0 0", overflow: "auto" }}>
+          <Box p={1.5} sx={{ flex: "1 0 0", overflow: "auto" }}>
             <Content />
           </Box>
-          <DialogActions buttonFlex={1} sx={{ p: 2, gap: 2 }}>
+          <DialogActions buttonFlex={1} sx={{ p: 1.5, gap: 1 }}>
             <Button type="submit" disabled={creationPhase === 2}>
               Next
             </Button>
