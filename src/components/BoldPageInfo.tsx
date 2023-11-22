@@ -20,7 +20,10 @@ const BoldPageInfo = ({ text }: Props) => {
   return (
     <MainContainer>
       <CenterContainer>
-        <span className="material-icons-round" style={{ fontSize: "48px", opacity: 0.5 }}>
+        <span
+          className="material-symbols-outlined"
+          style={{ fontSize: "48px", opacity: 0.5 }}
+        >
           info
         </span>
         <Typography level="title-lg">{text}</Typography>

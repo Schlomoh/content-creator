@@ -22,7 +22,7 @@ import PostStructure from "./PostStructure";
 import { useDispatch, useSelector } from "react-redux";
 import { setPersona, strategySelector } from "@/store/slices";
 import { ChangeEvent, useEffect } from "react";
-import { useSetStrategyMutation } from "@/store/api/strategyApi";
+import { useGetPostGuidesMutation } from "@/store/api/strategyApi";
 import { updateContentStrategy } from "@/store/thunks";
 import { AppDispatch } from "@/store";
 
@@ -34,7 +34,7 @@ interface Props {
 const StrategyModal = ({ onClose, open }: Props) => {
   const dispatch: AppDispatch = useDispatch();
   const strategy = useSelector(strategySelector);
-  const [send, { data, isLoading, isSuccess }] = useSetStrategyMutation();
+  const [send, { data, isLoading, isSuccess }] = useGetPostGuidesMutation();
 
   const { persona, generalTopics, structures } = strategy;
 

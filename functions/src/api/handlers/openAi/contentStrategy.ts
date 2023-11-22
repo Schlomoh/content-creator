@@ -1,10 +1,6 @@
 import { ContentStructure } from "@/types/database";
-import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPEN_AI_KEY,
-});
+import { openai } from ".";
 
 // Construct the messages payload
 const constructMessages = (
@@ -54,7 +50,6 @@ async function createContentStrategy(
   topicInterests: string
 ): Promise<{ contentStrategy: ContentStructure[] } | null> {
   const messages = constructMessages(persona, topicInterests);
-  console.log(messages);
 
   // Fetch completion
   const chatCompletion = await openai.chat.completions.create({

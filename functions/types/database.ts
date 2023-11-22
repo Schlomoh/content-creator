@@ -19,10 +19,10 @@ export interface ContentBatch {
   postAmount: number;
   selectedArticles: ArticlesEntity[];
   selectedContentStructures: ContentStructure[];
+  persona: string;
   phase: number;
   posts: Post[];
 }
-
 export interface ContentStructure {
   name: string;
   outline: string;
@@ -38,7 +38,8 @@ interface StrategyAiResult {
   contentGuide: string;
 }
 
-interface Post {
+export interface Post {
+  title: string;
   text: string;
   image: string;
   link: string;

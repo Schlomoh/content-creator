@@ -46,9 +46,9 @@ const UnfinishedBatchesList = () => {
 
   function handleListItemClick(index: number) {
     dispatch(resetCreation());
-    dispatch(setSettings(unfinishedBatches[index]));
+    dispatch(setSettings(sortedBatches[index]));
     dispatch(toggleCreationModal());
-    dispatch(setPhase(unfinishedBatches[index].phase));
+    dispatch(setPhase(sortedBatches[index].phase));
   }
 
   function handleDeleteClick(event: MouseEvent, index: number) {
@@ -91,7 +91,7 @@ const UnfinishedBatchesList = () => {
               sx={{ borderRadius: 8, overflow: "hidden" }}
             >
               <ListItemDecorator>
-                <span className="material-icons-round">article</span>
+                <span className="material-symbols-outlined">note_stack</span>
               </ListItemDecorator>
               <ListItemContent
                 sx={{
@@ -128,7 +128,7 @@ const UnfinishedBatchesList = () => {
                 color="neutral"
                 sx={{ m: -1, ml: 1, borderRadius: 8 }}
               >
-                <span className="material-icons-round">more_horiz</span>
+                <span className="material-symbols-outlined">more_horiz</span>
               </MenuButton>
               <Menu variant="soft" sx={{ translate: -8 }}>
                 <MenuItem
@@ -137,7 +137,9 @@ const UnfinishedBatchesList = () => {
                   variant="plain"
                 >
                   <ListItemDecorator>
-                    <span className="material-icons-round">delete_outline</span>
+                    <span className="material-symbols-outlined">
+                      delete_outline
+                    </span>
                   </ListItemDecorator>
                   Delete Batch
                 </MenuItem>

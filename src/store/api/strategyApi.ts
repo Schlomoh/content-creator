@@ -11,7 +11,10 @@ const strategyApi = createApi({
   baseQuery: baseQueryWithAuth(STRATEGY_ENDPOINT),
 
   endpoints: (builder) => ({
-    setStrategy: builder.mutation<void, StrategyState>({
+    getPostGuides: builder.mutation<
+      StrategyState,
+      Pick<StrategyState, "persona" | "generalTopics">
+    >({
       invalidatesTags: ["strategy"],
       query: (state) => ({
         url: `/contentGuides`,
@@ -22,5 +25,5 @@ const strategyApi = createApi({
   }),
 });
 
-export const { useSetStrategyMutation } = strategyApi;
+export const { useGetPostGuidesMutation } = strategyApi;
 export default strategyApi;

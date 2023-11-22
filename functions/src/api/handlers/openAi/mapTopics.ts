@@ -1,9 +1,5 @@
-import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPEN_AI_KEY,
-});
+import { openai } from ".";
 
 // Construct the messages payload
 const constructMessages = (

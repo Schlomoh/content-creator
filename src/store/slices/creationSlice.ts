@@ -18,6 +18,9 @@ const initialState: CreationState = {
     selectedArticles: [],
     selectedContentStructures: [],
     phase: 0,
+    persona: "",
+    posts: [],
+    batchId: "",
   },
   unfinishedBatches: [],
 };

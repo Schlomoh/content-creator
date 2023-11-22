@@ -57,7 +57,8 @@ export const updateContentBatch = createAsyncThunk(
       const state = getState() as RootState;
       const { creationData } = state.creationSlice;
       const { phase } = state.modalsSlice.creationModal;
-      const data = { batchId, ...creationData, phase, date };
+      const { persona } = state.strategySlice;
+      const data = { batchId, ...creationData, phase, date, persona };
       const docRef = doc(firestore, "content", data.batchId);
 
       // set local and db state to new content data
@@ -83,11 +84,11 @@ export const removeContentBatch = createAsyncThunk(
 
 export const updateContentStrategy = createAsyncThunk<void, StrategyState>(
   "db/setContentStrategy",
-  async (data) => {
+  async (contentStrategy) => {
     try {
       const docRef = doc(firestore, "strategies", "guides");
       // set local and db state to new content data
-      setDoc(docRef, data);
+      await setDoc(docRef, contentStrategy);
     } catch (error) {
       console.error(error);
     }

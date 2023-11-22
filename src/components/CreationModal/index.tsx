@@ -10,7 +10,12 @@ import {
   ModalClose,
 } from "@mui/joy";
 
-import { modalPhaseSelector, nextPhase, previousPhase } from "@/store/slices";
+import {
+  creationSelector,
+  modalPhaseSelector,
+  nextPhase,
+  previousPhase,
+} from "@/store/slices";
 import { updateContentBatch } from "@/store/thunks";
 import { AppDispatch } from "@/store";
 
@@ -18,6 +23,7 @@ import GeneralSettings from "./GeneralSettings";
 import NewsSettings from "./NewsSettings";
 import ErrorBoundary from "./ErrorBoundary";
 import StructureSettings from "./StructureSettings";
+import PostSettings from "./PostSettings";
 
 interface Props {
   onClose: () => void;
@@ -27,10 +33,17 @@ interface Props {
 const CreationModal = ({ onClose, open }: Props) => {
   const dispatch: AppDispatch = useDispatch();
   const { creationPhase } = useSelector(modalPhaseSelector);
+  const { topic, thoughts } = useSelector(creationSelector);
 
-  const Content = [GeneralSettings, NewsSettings, StructureSettings][
-    creationPhase
-  ];
+  const batchTopicThoughtsTitle =
+    topic && thoughts ? `${topic} - ${thoughts}` : "New Batch";
+
+  const Content = [
+    GeneralSettings,
+    NewsSettings,
+    StructureSettings,
+    PostSettings,
+  ][creationPhase];
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -47,7 +60,17 @@ const CreationModal = ({ onClose, open }: Props) => {
       anchor="right"
       size="lg"
     >
-      <DialogTitle>Content Creation</DialogTitle>
+      <DialogTitle
+        sx={{
+          display: 'block',
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          maxWidth: "80%",
+        }}
+      >
+        Content Creation | {batchTopicThoughtsTitle}
+      </DialogTitle>
       <ModalClose />
       <form
         onSubmit={handleSubmit}
@@ -62,7 +85,7 @@ const CreationModal = ({ onClose, open }: Props) => {
             <Content />
           </Box>
           <DialogActions buttonFlex={1} sx={{ p: 1.5, gap: 1 }}>
-            <Button type="submit" disabled={creationPhase === 2}>
+            <Button type="submit" disabled={creationPhase === 3}>
               Next
             </Button>
             <Button
