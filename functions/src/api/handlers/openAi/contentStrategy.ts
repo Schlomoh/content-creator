@@ -9,7 +9,7 @@ const constructMessages = (
 ): ChatCompletionMessageParam[] => [
   {
     role: "user",
-    content: `I need content ideas for a Twitter persona who is: ${persona}. The topics of interest are: ${topicInterests}. Please provide around 4 post structure guides. YOU MUST PLEASE CREATE A PARSABLE JSON.`,
+    content: `I need content ideas for a Twitter persona who is: ${persona}. The topics of interest are: ${topicInterests}. Please provide around 4 post structure guides for specific types of posts. YOU MUST PLEASE CREATE A PARSABLE JSON.`,
   },
 ];
 
@@ -18,7 +18,7 @@ const functionsMeta = [
   {
     name: "create_content_strategy",
     description:
-      "Generates post skeletons/layouts as greater content schema for Twitter posts, designed to engange other users with interests in the picked topics.",
+      "Generates post skeletons/layouts within a greater content schema for Twitter posts, designed to engange other users with interests in the picked topics.",
     parameters: {
       type: "object",
       properties: {
@@ -53,10 +53,12 @@ async function createContentStrategy(
 
   // Fetch completion
   const chatCompletion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-4-1106-preview",
     messages,
     functions: functionsMeta,
-    function_call: "auto",
+    function_call: {
+      name: "create_content_strategy",
+    },
   });
 
   const responseMessage = chatCompletion.choices[0].message;

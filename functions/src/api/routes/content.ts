@@ -7,7 +7,6 @@ import verifyFirebaseToken from "../../middleware/verifyFirebaseToken";
 import { handleBadRequest } from "./utils";
 import { ContentBatch } from "@/types/database";
 import createPosts from "../handlers/openAi/createPosts";
-import { firebaseApp } from "../setup/setupFirebase";
 
 const router = Router();
 
@@ -34,32 +33,21 @@ router.get(
   }
 );
 
-router.get(
+router.post(
   "/posts",
   verifyFirebaseToken,
-  async (req: Request<{ batchId: string }>, res: Response) => {
-    const { batchId } = req.query as { batchId: string };
+  async (req: Request, res: Response) => {
+    const { batch } = req.body as { batch: ContentBatch };
 
-    if (!batchId) {
-      return handleBadRequest(res, "BatchID is required");
+    if (!batch) {
+      return handleBadRequest(res, "Batch is required");
     }
 
     try {
-      const db = firebaseApp.firestore();
-      const batchDocRef = db.collection("content").doc(String(batchId));
-      const batchDoc = await batchDocRef.get();
-
-      if (!batchDoc.exists) {
-        return handleBadRequest(res, "Batch not found");
-      }
-
-      const batch = batchDoc.data() as ContentBatch;
-      console.log(JSON.stringify(batch));
-
       const posts = await createPosts(batch);
       if (!posts) throw new Error();
 
-      res.json({ posts });
+      res.json(posts);
     } catch (error) {
       console.error(error);
       return handleBadRequest(res, "Error creating posts");

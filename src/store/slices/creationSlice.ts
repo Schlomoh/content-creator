@@ -20,7 +20,6 @@ const initialState: CreationState = {
     phase: 0,
     persona: "",
     posts: [],
-    batchId: "",
   },
   unfinishedBatches: [],
 };

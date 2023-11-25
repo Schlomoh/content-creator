@@ -12,7 +12,7 @@ const constructMessages = (
   },
   {
     role: "system",
-    content: `The following is a list for basic Twitter post structure or theme that objective lays out the structure for an engaging and authentic Twitter post. The guides: ${JSON.stringify(
+    content: `The following is a list of basic Twitter post structures or themes that objectively lay out the structure for an engaging and authentic Twitter post. Use the following to create a selection of different twitter posts that are engaging for my target audience. The guides: ${JSON.stringify(
       batch.selectedContentStructures
     )}`,
   },
@@ -24,7 +24,7 @@ const constructMessages = (
   },
   {
     role: "user",
-    content: `Create a selection of different twitter posts that are engaging for my target audience. The topics of interest are: ${batch.topic}. Please provide around ${batch.postAmount} posts. `,
+    content: `Create a selection of different twitter posts that are engaging for my target audience. Do not include any hashtags. The topics of interest are: ${batch.topic}. Please provide around ${batch.postAmount} posts. `,
   },
 ];
 
@@ -33,24 +33,24 @@ const functionsMeta = [
   {
     name: "create_posts",
     description:
-      "Create authentic Twitter posts that would be engaging for my target audience",
+      "Create engaging and authentic Twitter posts for my target audience",
     parameters: {
       type: "object",
       properties: {
         posts: {
           type: "array",
-          description: `Twitter posts with using the given content schema`,
+          description: `Twitter posts using the given content schema`,
           items: {
             type: "object",
             optional: true,
             properties: {
               title: {
                 type: "string",
-                description: `The title of the post`,
+                description: `The title of the post. Short, only for visual purposes`,
               },
               text: {
                 type: "string",
-                description: `The text content of the post`,
+                description: `The content of the post without hashtags`,
               },
             },
           },
@@ -61,15 +61,17 @@ const functionsMeta = [
   },
 ];
 
-async function createPosts(batch: ContentBatch): Promise<Post[] | null> {
+async function createPosts(
+  batch: ContentBatch
+): Promise<{ posts: Post[] } | null> {
   const messages = constructMessages(batch);
 
   // Fetch completion
   const chatCompletion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-4-1106-preview",
     messages,
     functions: functionsMeta,
-    function_call: "auto",
+    function_call: {'name': 'create_posts'},
   });
 
   const responseMessage = chatCompletion.choices[0].message;

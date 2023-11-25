@@ -14,11 +14,11 @@ import {
 import { useSelector } from "react-redux";
 
 const PostSettings = () => {
-  const { batchId } = useSelector(creationSelector);
+  const batch = useSelector(creationSelector);
   const [send, { data, isLoading }] = useGetPostsMutation();
 
   function handleClick() {
-    if (batchId) send(batchId);
+    if (batch) send(batch);
   }
 
   return (
@@ -44,7 +44,20 @@ const PostSettings = () => {
             {isLoading
               ? "Loading..."
               : data?.posts.map((post, index) => (
-                  <Tab key={index}>{post.title}</Tab>
+                  <Tab key={index}>
+                    <Typography
+                      level="body-sm"
+                      display="inline"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        textWrap: "nowrap",
+                      }}
+                    >
+                      {post.title}
+                    </Typography>
+                  </Tab>
                 ))}
           </TabList>
           {isLoading

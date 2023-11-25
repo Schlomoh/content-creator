@@ -43,7 +43,7 @@ async function mapTopics(
     model: "gpt-3.5-turbo-1106",
     messages,
     functions: functionsMeta,
-    function_call: "auto",
+    function_call: { name: "map_topic_to_category" },
   });
 
   const responseMessage = chatCompletion.choices[0].message;

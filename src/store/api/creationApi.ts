@@ -24,13 +24,13 @@ const creationApi = createApi({
         params,
       }),
     }),
-    getPosts: builder.mutation<PostsResponse, string>({
+    getPosts: builder.mutation<PostsResponse, Partial<ContentBatch>>({
       invalidatesTags: ["posts"],
-      query: (batchId) => ({
+      query: (batch) => ({
         url: "posts",
-        method: "GET",
-        params: {
-          batchId: batchId,
+        method: "POST",
+        body: {
+          batch,
         },
       }),
     }),
